@@ -150,14 +150,28 @@ function init() {
       map: texture
     });
     const geometry = new THREE.BoxGeometry(4, 4, 4);
-    const box = new THREE.Mesh(geometry, material);
 
-    box.position.x = 30;
-    box.position.y = 2;
-    box.position.z = -10;
-    box.receiveShadow = true;
-    box.castShadow = true;
-    scene.add(box);
+    let boxes = []
+    for (let i = 0; i < 300; i++) {
+      const box = new THREE.Mesh(geometry, material);
+      box.position.x = Math.round((Math.random()) * 20) * 4 - 40;
+      box.position.y = 2;
+      box.position.z = Math.round((Math.random()) * 20) * 4 - 40;
+
+      let dup = boxes.some(function(element) {
+        return (element[0] == box.position.x && element[1] == box.position.y && element[2] == box.position.z);
+      })
+      if (dup) {
+        box.position.y += 4;
+      }
+
+      // 影の設定
+      box.receiveShadow = true;
+      box.castShadow = true;
+
+      scene.add(box);
+      boxes.push([box.position.x, box.position.y, box.position.z])
+    }
   }
 
   function add_light(scene) {
