@@ -32,7 +32,9 @@ function init() {
   box = add_floor(scene)
   sphere = add_sphere(scene)
   add_model(scene);
+  add_book(scene)
   add_light(scene);
+  add_cube(scene);
 
   // 初回実行
   tick();
@@ -102,14 +104,53 @@ function init() {
       model.position.z = 8;
       scene.add(model);
     });
+  }
 
-    loader.load('./model/box/box.dae', (collada) => {
+  function add_book(scene) {
+    const loader = new THREE.ColladaLoader();
+
+    // Colladaファイルのパスを指定
+    loader.load('./model/book/book.dae', (collada) => {
       // 読み込み後に3D空間に追加
       const model = collada.scene;
-      model.position.x = 0
-      model.position.y = 0
+      model.position.x = 4;
+      model.position.y = 1;
+      model.position.z = 8;
       scene.add(model);
     });
+
+    loader.load('./model/book/book.dae', (collada) => {
+      // 読み込み後に3D空間に追加
+      const model = collada.scene;
+      model.position.x = 2;
+      model.position.y = 1;
+      model.position.z = 8;
+      scene.add(model);
+    });
+
+    loader.load('./model/book/book.dae', (collada) => {
+      // 読み込み後に3D空間に追加
+      const model = collada.scene;
+      model.position.x = 0;
+      model.position.y = 1;
+      model.position.z = 8;
+      scene.add(model);
+    });
+  }
+
+  function add_cube(scene) {
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('./img/wood.jpg');
+    const material = new THREE.MeshStandardMaterial({
+      map: texture
+    });
+    const geometry = new THREE.BoxGeometry(4, 4, 4);
+    const box = new THREE.Mesh(geometry, material);
+
+    box.position.x = 30;
+    box.position.y = 2;
+    box.position.z = -10;
+    scene.add(box);
   }
 
   function add_light(scene) {
