@@ -28,42 +28,10 @@ function init() {
   controls.target.set(0, 3, 0);
   controls.update();
 
-  // 平行光源を作成
-  const directionalLight = new THREE.DirectionalLight(0xffffff);
-  directionalLight.position.set(1, 1, 1);
-  scene.add(directionalLight);
-  // 環境光を追加
-  const ambientLight = new THREE.AmbientLight(0x333333);
-  scene.add(ambientLight);
-
   box = add_cube(scene)
-  box.position.x = 30;
-  box.position.y = 6;
-  box.position.z = -10;
   sphere = add_sphere(scene)
-  sphere.position.x = -20;
-  sphere.position.y = 10;
-  sphere.position.z = -10;
-
-  const loader = new THREE.ColladaLoader();
-
-  // Colladaファイルのパスを指定
-  loader.load('./model/elf/elf.dae', (collada) => {
-    // 読み込み後に3D空間に追加
-    const model = collada.scene;
-    model.position.x = 4;
-    model.position.y = 5;
-    model.position.z = 1;
-    scene.add(model);
-  });
-
-  loader.load('./model/box/box.dae', (collada) => {
-    // 読み込み後に3D空間に追加
-    const model = collada.scene;
-    model.position.x = 0
-    model.position.y = 0
-    scene.add(model);
-  });
+  add_model(scene);
+  add_light(scene);
 
   // 初回実行
   tick();
@@ -83,6 +51,10 @@ function init() {
     const geometry = new THREE.BoxGeometry(10, 10, 10);
     const material = new THREE.MeshNormalMaterial();
     const box = new THREE.Mesh(geometry, material);
+
+    box.position.x = 30;
+    box.position.y = 6;
+    box.position.z = -10;
     scene.add(box);
 
     return box
@@ -100,10 +72,46 @@ function init() {
       map: texture
     });
     // メッシュを作成
-    const mesh = new THREE.Mesh(geometry, material);
+    const sphere = new THREE.Mesh(geometry, material);
     // 3D空間にメッシュを追加
-    scene.add(mesh);
+    scene.add(sphere);
 
-    return mesh
+    sphere.position.x = -20;
+    sphere.position.y = 10;
+    sphere.position.z = -10;
+
+    return sphere
+  }
+
+  function add_model(scene) {
+    const loader = new THREE.ColladaLoader();
+
+    // Colladaファイルのパスを指定
+    loader.load('./model/elf/elf.dae', (collada) => {
+      // 読み込み後に3D空間に追加
+      const model = collada.scene;
+      model.position.x = 4;
+      model.position.y = 5;
+      model.position.z = 1;
+      scene.add(model);
+    });
+
+    loader.load('./model/box/box.dae', (collada) => {
+      // 読み込み後に3D空間に追加
+      const model = collada.scene;
+      model.position.x = 0
+      model.position.y = 0
+      scene.add(model);
+    });
+  }
+
+  function add_light(scene) {
+    // 平行光源を作成
+    const directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
+    // 環境光を追加
+    const ambientLight = new THREE.AmbientLight(0x333333);
+    scene.add(ambientLight);
   }
 }
