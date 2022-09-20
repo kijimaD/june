@@ -18,11 +18,11 @@ function init() {
 
   // シーンを作成
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xFFFFFF);
+  scene.background = new THREE.Color(0x000000);
 
   // カメラを作成
   const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-  camera.position.set(0, 40, 80); // 見下ろし
+  camera.position.set(0, 500, 500); // 見下ろし
   camera.lookAt(new THREE.Vector3(0, 0, 0)); // 原点方向を向く
 
   // カメラコントローラーを作成
@@ -52,12 +52,15 @@ function init() {
 
   function add_floor(scene) {
     // 箱を作成
-    const geometry = new THREE.PlaneGeometry(200, 200);
+    const geometry = new THREE.PlaneGeometry(500, 500);
 
     const loader = new THREE.TextureLoader();
     const texture = loader.load('./img/floor.jpg');
     const material = new THREE.MeshStandardMaterial({
-      map: texture
+      map: texture,
+      color: 0xffffff,
+      roughness: 0.0,
+      metalness: 0.8,
     });
 
     const floor = new THREE.Mesh(geometry, material);
@@ -88,8 +91,8 @@ function init() {
     // 3D空間にメッシュを追加
     scene.add(sphere);
 
-    sphere.position.x = -20;
-    sphere.position.y = 10;
+    sphere.position.x = -10;
+    sphere.position.y = 100;
     sphere.position.z = -10;
     sphere.receiveShadow = true;
     sphere.castShadow = true;
@@ -145,25 +148,27 @@ function init() {
 
   function add_cube(scene) {
     const loader = new THREE.TextureLoader();
-    const texture = loader.load('./img/wood.jpg');
+    const texture = loader.load('./img/metal.jpg');
     const material = new THREE.MeshStandardMaterial({
-      map: texture
+      map: texture,
+      color: 0x2299ff,
+      roughness: 0.1,
+      metalness: 0.1,
     });
-    const geometry = new THREE.BoxGeometry(4, 4, 4);
+    const geometry = new THREE.BoxGeometry(9, 9, 9);
 
     let boxes = []
     for (let i = 0; i < 300; i++) {
       const box = new THREE.Mesh(geometry, material);
-      box.position.x = Math.round((Math.random()) * 20) * 4 - 40;
-      box.position.y = 2;
-      box.position.z = Math.round((Math.random()) * 20) * 4 - 40;
+      box.position.x = Math.round((Math.random()) * 10) * 10 - 40;
+      box.position.y = 4;
+      box.position.z = Math.round((Math.random()) * 10) * 10 - 40;
 
       boxes.some(function(element) {
         while (element[0] == box.position.x && element[1] == box.position.y && element[2] == box.position.z) {
-          box.position.y += 4;
+          box.position.y += 10;
         }
       })
-
       // 影の設定
       box.receiveShadow = true;
       box.castShadow = true;
@@ -175,17 +180,16 @@ function init() {
 
   function add_light(scene) {
     // 環境光を追加
-    const ambientLight = new THREE.AmbientLight(0x333333);
-    scene.add(ambientLight);
+    // const ambientLight = new THREE.AmbientLight(0x333333);
+    // scene.add(ambientLight);
 
     {
-      const spotLight = new THREE.SpotLight(0xffffff, 4, 200, Math.PI / 5, 0.2, 1.5);
-      spotLight.position.set(80, 30, 80);
+      const spotLight = new THREE.SpotLight(0xffffff, 4, 1000, Math.PI / 4, 0.2, 1.5);
+      spotLight.position.set(200, 400, 200);
       spotLight.castShadow = true; // 影を落とす設定
-      spotLight.shadow.mapSize.width = 2048;
-      spotLight.shadow.mapSize.height = 2048;
+      spotLight.shadow.mapSize.width = 1024;
+      spotLight.shadow.mapSize.height = 1024;
       scene.add(spotLight);
     }
-
   }
 }
