@@ -14,6 +14,7 @@ function init() {
   });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
+  renderer.shadowMap.enabled = true;
 
   // シーンを作成
   const scene = new THREE.Scene();
@@ -51,7 +52,7 @@ function init() {
 
   function add_floor(scene) {
     // 箱を作成
-    const geometry = new THREE.BoxGeometry(200, 2, 200);
+    const geometry = new THREE.PlaneGeometry(200, 200);
 
     const loader = new THREE.TextureLoader();
     const texture = loader.load('./img/floor.jpg');
@@ -59,14 +60,16 @@ function init() {
       map: texture
     });
 
-    const box = new THREE.Mesh(geometry, material);
+    const floor = new THREE.Mesh(geometry, material);
 
-    box.position.x = 0;
-    box.position.y = -1;
-    box.position.z = -10;
-    scene.add(box);
+    floor.position.x = 0;
+    floor.position.y = 0;
+    floor.position.z = -10;
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true
+    scene.add(floor);
 
-    return box
+    return floor
   }
 
   function add_sphere(scene) {
@@ -88,6 +91,8 @@ function init() {
     sphere.position.x = -20;
     sphere.position.y = 10;
     sphere.position.z = -10;
+    sphere.receiveShadow = true;
+    sphere.castShadow = true;
 
     return sphere
   }
@@ -150,16 +155,24 @@ function init() {
     box.position.x = 30;
     box.position.y = 2;
     box.position.z = -10;
+    box.receiveShadow = true;
+    box.castShadow = true;
     scene.add(box);
   }
 
   function add_light(scene) {
-    // 平行光源を作成
-    const directionalLight = new THREE.DirectionalLight(0xffffff);
-    directionalLight.position.set(1, 1, 1);
-    scene.add(directionalLight);
     // 環境光を追加
     const ambientLight = new THREE.AmbientLight(0x333333);
     scene.add(ambientLight);
+
+    {
+      const spotLight = new THREE.SpotLight(0xffffff, 4, 200, Math.PI / 5, 0.2, 1.5);
+      spotLight.position.set(80, 30, 80);
+      spotLight.castShadow = true; // 影を落とす設定
+      spotLight.shadow.mapSize.width = 2048;
+      spotLight.shadow.mapSize.height = 2048;
+      scene.add(spotLight);
+    }
+
   }
 }
