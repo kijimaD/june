@@ -158,12 +158,11 @@ function init() {
       box.position.y = 2;
       box.position.z = Math.round((Math.random()) * 20) * 4 - 40;
 
-      let dup = boxes.some(function(element) {
-        return (element[0] == box.position.x && element[1] == box.position.y && element[2] == box.position.z);
+      boxes.some(function(element) {
+        while (element[0] == box.position.x && element[1] == box.position.y && element[2] == box.position.z) {
+          box.position.y += 4;
+        }
       })
-      if (dup) {
-        box.position.y += 4;
-      }
 
       // 影の設定
       box.receiveShadow = true;
