@@ -17,6 +17,7 @@ function init() {
 
   // シーンを作成
   const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xFFFFFF);
 
   // カメラを作成
   const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
@@ -28,7 +29,7 @@ function init() {
   controls.target.set(0, 3, 0);
   controls.update();
 
-  box = add_cube(scene)
+  box = add_floor(scene)
   sphere = add_sphere(scene)
   add_model(scene);
   add_light(scene);
@@ -46,14 +47,20 @@ function init() {
     requestAnimationFrame(tick);
   }
 
-  function add_cube(scene) {
+  function add_floor(scene) {
     // 箱を作成
-    const geometry = new THREE.BoxGeometry(10, 10, 10);
-    const material = new THREE.MeshNormalMaterial();
+    const geometry = new THREE.BoxGeometry(200, 2, 200);
+
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('./img/floor.jpg');
+    const material = new THREE.MeshStandardMaterial({
+      map: texture
+    });
+
     const box = new THREE.Mesh(geometry, material);
 
-    box.position.x = 30;
-    box.position.y = 6;
+    box.position.x = 0;
+    box.position.y = -1;
     box.position.z = -10;
     scene.add(box);
 
@@ -90,9 +97,9 @@ function init() {
     loader.load('./model/elf/elf.dae', (collada) => {
       // 読み込み後に3D空間に追加
       const model = collada.scene;
-      model.position.x = 4;
-      model.position.y = 5;
-      model.position.z = 1;
+      model.position.x = 8;
+      model.position.y = 1;
+      model.position.z = 8;
       scene.add(model);
     });
 
