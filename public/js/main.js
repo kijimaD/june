@@ -22,7 +22,7 @@ function init() {
 
   // カメラを作成
   const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-  camera.position.set(0, 500, 500); // 見下ろし
+  camera.position.set(0, 100, 300);
   camera.lookAt(new THREE.Vector3(0, 0, 0)); // 原点方向を向く
 
   // カメラコントローラーを作成
@@ -30,12 +30,11 @@ function init() {
   controls.target.set(0, 3, 0);
   controls.update();
 
+  add_light(scene);
   box = add_floor(scene)
   sphere = add_sphere(scene)
   add_model(scene);
-  add_book(scene)
-  add_light(scene);
-  request_page(scene);
+  request_page(scene, add_cube);
 
   // 初回実行
   tick();
@@ -107,46 +106,14 @@ function init() {
     loader.load('./model/elf/elf.dae', (collada) => {
       // 読み込み後に3D空間に追加
       const model = collada.scene;
-      model.position.x = 8;
+      model.position.x = -80;
       model.position.y = 1;
-      model.position.z = 8;
+      model.position.z = 80;
       scene.add(model);
     });
   }
 
-  function add_book(scene) {
-    const loader = new THREE.ColladaLoader();
-
-    // Colladaファイルのパスを指定
-    loader.load('./model/book/book.dae', (collada) => {
-      // 読み込み後に3D空間に追加
-      const model = collada.scene;
-      model.position.x = 4;
-      model.position.y = 1;
-      model.position.z = 8;
-      scene.add(model);
-    });
-
-    loader.load('./model/book/book.dae', (collada) => {
-      // 読み込み後に3D空間に追加
-      const model = collada.scene;
-      model.position.x = 2;
-      model.position.y = 1;
-      model.position.z = 8;
-      scene.add(model);
-    });
-
-    loader.load('./model/book/book.dae', (collada) => {
-      // 読み込み後に3D空間に追加
-      const model = collada.scene;
-      model.position.x = 0;
-      model.position.y = 1;
-      model.position.z = 8;
-      scene.add(model);
-    });
-  }
-
-  function request_page(scene) {
+  function request_page(scene, callback) {
     const url = 'https://kijimad.github.io/roam/20210911113057-go.html'; // リクエスト先URL
     var request = new XMLHttpRequest();
     request.open('GET', url);
@@ -160,7 +127,7 @@ function init() {
         // 取得成功
         var result = request.responseText;
         var count = result.match((/done DONE/g) || []).length / 2 // 目次とコンテンツに2つあるので2で割る
-        add_cube(scene, count);
+        callback(scene, count);
       }
     };
     request.send(null);
