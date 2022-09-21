@@ -34,7 +34,12 @@ function init() {
   box = add_floor(scene)
   sphere = add_sphere(scene)
   add_model(scene);
-  request_page(scene, add_cube);
+  request_page(scene, function(scene, text) {
+    const todoCount = text.match((/todo TODO/g) || []).length / 2 // 目次とコンテンツに2つあるので2で割る
+    const doneCount = text.match((/done DONE/g) || []).length / 2 // 目次とコンテンツに2つあるので2で割る
+    add_cube(scene, todoCount, 0xff5733)
+    add_cube(scene, doneCount, 0x00ff00)
+  });
 
   // 初回実行
   tick();
@@ -117,7 +122,6 @@ function init() {
     const url = 'https://kijimad.github.io/roam/20210911113057-go.html'; // リクエスト先URL
     var request = new XMLHttpRequest();
     request.open('GET', url);
-    console.log(request)
     request.onreadystatechange = function () {
       if (request.readyState != 4) {
         console.log('processing')
@@ -126,19 +130,19 @@ function init() {
       } else {
         // 取得成功
         var result = request.responseText;
-        var count = result.match((/done DONE/g) || []).length / 2 // 目次とコンテンツに2つあるので2で割る
-        callback(scene, count);
+        callback(scene, result);
       }
     };
     request.send(null);
   }
 
-  function add_cube(scene, num) {
+  function add_cube(scene, num, color) {
     const loader = new THREE.TextureLoader();
     const texture = loader.load('./img/metal.jpg');
+    // const color = "0x" + Math.floor(Math.random() * 16777215).toString(16);
     const material = new THREE.MeshStandardMaterial({
       map: texture,
-      color: 0x2299ff,
+      color: Number(color),
       roughness: 0.1,
       metalness: 0.1,
     });
