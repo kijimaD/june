@@ -22,7 +22,7 @@ function init() {
 
   // カメラを作成
   const camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
-  camera.position.set(0, 100, 300);
+  camera.position.set(0, 40, 200);
   camera.lookAt(new THREE.Vector3(0, 0, 0)); // 原点方向を向く
 
   // カメラコントローラーを作成
@@ -111,9 +111,21 @@ function init() {
     loader.load('./model/elf/elf.dae', (collada) => {
       // 読み込み後に3D空間に追加
       const model = collada.scene;
-      model.position.x = -80;
+      model.position.x = 0;
       model.position.y = 1;
       model.position.z = 80;
+      scene.add(model);
+    });
+
+    loader.load('./model/couch1/couch1.dae', (collada) => {
+      // 読み込み後に3D空間に追加
+      const model = collada.scene;
+      model.position.x = 20;
+      model.position.y = 1;
+      model.position.z = 80;
+      model.scale.x = 20;
+      model.scale.y = 20;
+      model.scale.z = 20;
       scene.add(model);
     });
   }
