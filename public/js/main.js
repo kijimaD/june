@@ -35,7 +35,7 @@ function init() {
   add_model(scene);
   add_book(scene)
   add_light(scene);
-  add_cube(scene);
+  request_page(scene);
 
   // 初回実行
   tick();
@@ -146,7 +146,27 @@ function init() {
     });
   }
 
-  function add_cube(scene) {
+  function request_page(scene) {
+    const url = 'https://kijimad.github.io/roam/20210911113057-go.html'; // リクエスト先URL
+    var request = new XMLHttpRequest();
+    request.open('GET', url);
+    console.log(request)
+    request.onreadystatechange = function () {
+      if (request.readyState != 4) {
+        console.log('processing')
+      } else if (request.status != 200) {
+        console.log('failed')
+      } else {
+        // 取得成功
+        var result = request.responseText;
+        var count = result.match((/done DONE/g) || []).length / 2 // 目次とコンテンツに2つあるので2で割る
+        add_cube(scene, count);
+      }
+    };
+    request.send(null);
+  }
+
+  function add_cube(scene, num) {
     const loader = new THREE.TextureLoader();
     const texture = loader.load('./img/metal.jpg');
     const material = new THREE.MeshStandardMaterial({
@@ -158,7 +178,7 @@ function init() {
     const geometry = new THREE.BoxGeometry(9, 9, 9);
 
     let boxes = []
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i <= num; i++) {
       const box = new THREE.Mesh(geometry, material);
       box.position.x = Math.round((Math.random()) * 10) * 10 - 40;
       box.position.y = 4;
