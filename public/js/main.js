@@ -112,20 +112,49 @@ function init() {
       // 読み込み後に3D空間に追加
       const model = collada.scene;
       model.position.x = 0;
-      model.position.y = 1;
+      model.position.y = 8;
       model.position.z = 80;
+      model.rotation.z = Math.PI / 2;
       scene.add(model);
     });
 
     loader.load('./model/couch1/couch1.dae', (collada) => {
-      // 読み込み後に3D空間に追加
       const model = collada.scene;
       model.position.x = 20;
       model.position.y = 1;
-      model.position.z = 80;
+      model.position.z = 90;
+      model.rotation.z = -Math.PI / 2;
       model.scale.x = 20;
       model.scale.y = 20;
       model.scale.z = 20;
+      scene.add(model);
+    });
+
+    loader.load('./model/table1/table1.dae', (collada) => {
+      const model = collada.scene;
+      model.position.x = 0;
+      model.position.y = 1;
+      model.position.z = 90;
+
+      model.scale.x = 6;
+      model.scale.y = 10;
+      model.scale.z = 4;
+
+      model.receiveShadow = true
+      scene.add(model);
+    });
+
+    loader.load('./model/monitor1/monitor1.dae', (collada) => {
+      const model = collada.scene;
+      model.position.x = 30;
+      model.position.y = 1;
+      model.position.z = 74;
+      model.rotation.z = Math.PI / 2;
+      model.scale.x = 4;
+      model.scale.y = 4;
+      model.scale.z = 4;
+
+      model.receiveShadow = true
       scene.add(model);
     });
   }
