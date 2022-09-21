@@ -7,6 +7,9 @@ function init() {
   const width = 1240;
   const height = 800;
 
+  let radius = 40; // 半径
+  let radian = 0; // 角度
+
   // レンダラーを作成
   const canvasElement = document.querySelector('#myCanvas');
   const renderer = new THREE.WebGLRenderer({
@@ -32,6 +35,7 @@ function init() {
 
   add_light(scene);
   box = add_floor(scene)
+  add_wall(scene)
   sphere = add_sphere(scene)
   add_model(scene);
   request_page(scene, function(scene, text) {
@@ -49,17 +53,19 @@ function init() {
     // box.rotation.y += 0.01;
     // box.rotation.x += 0.01;
     sphere.rotation.y += 0.01;
+    sphere.position.x = radius * Math.cos(radian);
+    sphere.position.z = radius * Math.sin(radian);
+    radian += 0.01;
 
     renderer.render(scene, camera); // レンダリング
     requestAnimationFrame(tick);
   }
 
   function add_floor(scene) {
-    // 箱を作成
     const geometry = new THREE.PlaneGeometry(500, 500);
 
     const loader = new THREE.TextureLoader();
-    const texture = loader.load('./img/floor.jpg');
+    const texture = loader.load('./img/wood.jpg');
     const material = new THREE.MeshStandardMaterial({
       map: texture,
       color: 0xffffff,
@@ -73,6 +79,29 @@ function init() {
     floor.position.y = 0;
     floor.position.z = -10;
     floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true
+    scene.add(floor);
+
+    return floor
+  }
+
+  function add_wall(scene) {
+    const geometry = new THREE.PlaneGeometry(500, 500);
+
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('./img/wood.jpg');
+    const material = new THREE.MeshStandardMaterial({
+      map: texture,
+      color: 0xd47285,
+      roughness: 0.0,
+      metalness: 0.8,
+    });
+
+    const floor = new THREE.Mesh(geometry, material);
+
+    floor.position.x = 0;
+    floor.position.y = 0;
+    floor.position.z = -100;
     floor.receiveShadow = true
     scene.add(floor);
 
@@ -95,9 +124,9 @@ function init() {
     // 3D空間にメッシュを追加
     scene.add(sphere);
 
-    sphere.position.x = -10;
+    sphere.position.x = 0;
     sphere.position.y = 100;
-    sphere.position.z = -10;
+    sphere.position.z = 0;
     sphere.receiveShadow = true;
     sphere.castShadow = true;
 
